@@ -23,14 +23,14 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
           Shop online. Pick up at your nearest SGS store.
         </div>
 
-        <div className="flex items-center gap-3 py-3 border-t border-sgs-line sm:border-t-0">
+        <div className="flex flex-wrap items-center gap-2 border-t border-sgs-line py-3 sm:gap-3 sm:border-t-0 md:flex-nowrap">
           {/* Logo */}
           <a href="#top" className="flex items-center gap-2 shrink-0">
             <span className="flex h-9 w-9 items-center justify-center rounded-card bg-sgs-green text-sgs-cream font-display font-bold text-lg">
               S
             </span>
-            <span className="font-display font-bold text-lg leading-none">
-              SGS <span className="text-sgs-green">Hyper</span>
+            <span className="font-display text-base font-bold leading-none sm:text-lg">
+              SGS <span className="hidden text-sgs-green sm:inline">Hyper</span>
             </span>
           </a>
 
@@ -47,7 +47,7 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
           </button>
 
           {/* Search */}
-          <div className="flex-1 min-w-0">
+          <div className="order-last w-full min-w-0 md:order-none md:flex-1">
             <label className="sr-only" htmlFor="site-search">
               Search products
             </label>
@@ -56,7 +56,7 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
               type="search"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search for atta, rice, milk…"
+              placeholder="Search products"
               className="w-full rounded-full border border-sgs-line bg-white px-4 py-2 text-sm placeholder:text-sgs-ink/40 focus:border-sgs-green"
             />
           </div>
@@ -97,7 +97,7 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
         {/* Mobile: store selector row */}
         <button
           onClick={openSelector}
-          className="md:hidden flex items-center gap-1.5 pb-2 text-sm text-sgs-green-dark"
+          className="flex min-h-11 w-full items-center gap-1.5 pb-2 text-left text-sm text-sgs-green-dark md:hidden"
         >
           <span aria-hidden>📍</span>
           <span className="truncate">{selectedStore ? selectedStore.storeName : 'Select your store'}</span>
@@ -106,7 +106,7 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
 
         {/* Category nav */}
         <nav
-          className={`${menuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-1 md:gap-4 pb-3 md:pb-2 overflow-x-auto no-scrollbar`}
+          className={`${menuOpen ? 'flex' : 'hidden'} max-h-[45dvh] flex-col gap-1 overflow-y-auto pb-3 md:flex md:max-h-none md:flex-row md:gap-4 md:overflow-x-auto md:overflow-y-visible md:pb-2 no-scrollbar`}
         >
           <a
             href="/admin"

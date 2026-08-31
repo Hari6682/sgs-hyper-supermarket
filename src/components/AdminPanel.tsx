@@ -58,18 +58,18 @@ function SecurityShell({
   onBackToStore: () => void
 }) {
   return (
-    <main className="min-h-screen bg-sgs-ink px-4 py-10 text-sgs-cream">
+    <main className="min-h-screen bg-sgs-ink px-3 py-5 text-sgs-cream sm:px-4 sm:py-10">
       <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+        <section className="rounded-[24px] border border-white/10 bg-white/5 p-5 backdrop-blur sm:rounded-[28px] sm:p-8">
           <p className="mb-4 inline-flex rounded-full border border-white/15 px-3 py-1 text-xs uppercase tracking-[0.24em] text-sgs-mango">
             Secure Staff Access
           </p>
-          <h1 className="mb-4 font-display text-4xl font-bold leading-tight">{title}</h1>
+          <h1 className="mb-4 font-display text-3xl font-bold leading-tight sm:text-4xl">{title}</h1>
           <p className="max-w-xl text-sm text-white/70">{subtitle}</p>
         </section>
 
-        <section className="rounded-[28px] bg-sgs-cream p-8 text-sgs-ink">
-          <div className="mb-6 flex items-center justify-between gap-3">
+        <section className="rounded-[24px] bg-sgs-cream p-5 text-sgs-ink sm:rounded-[28px] sm:p-8">
+          <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sgs-green-dark/70">
                 Access Control
@@ -653,18 +653,18 @@ export default function AdminPanel({ initialTab = 'products', onBackToStore }: A
   }
 
   return (
-    <main className="min-h-screen bg-[#f4efe5] px-4 py-8">
+    <main className="min-h-screen bg-[#f4efe5] px-3 py-5 sm:px-4 sm:py-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sgs-green-dark/70">
               SGS Staff Portal
             </p>
-            <h1 className="font-display text-3xl font-bold text-sgs-ink">
+            <h1 className="font-display text-2xl font-bold text-sgs-ink sm:text-3xl">
               {catalogAllowed ? 'Catalog, orders, support, and stock alerts' : 'Orders, support, and stock alerts'}
             </h1>
           </div>
-          <div className="ml-auto flex flex-wrap items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto">
             <span className="rounded-full bg-sgs-green px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-sgs-cream">
               {staffSession.role ?? 'staff'} · {staffSession.aal === 'aal2' ? 'AAL2' : 'AAL1'}
             </span>
@@ -1023,7 +1023,7 @@ export default function AdminPanel({ initialTab = 'products', onBackToStore }: A
         )}
 
         {activeTab === 'orders' && (
-          <section className="rounded-[32px] border border-sgs-line bg-white p-6 shadow-sm">
+          <section className="rounded-[24px] border border-sgs-line bg-white p-4 shadow-sm sm:rounded-[32px] sm:p-6">
             <div className="mb-5 grid gap-3 md:grid-cols-3">
               <input
                 value={orderSearch}
@@ -1062,7 +1062,7 @@ export default function AdminPanel({ initialTab = 'products', onBackToStore }: A
             ) : (
               <div className="space-y-4">
                 {filteredOrders.map((order) => (
-                  <article key={order.orderNumber} className="rounded-2xl border border-sgs-line bg-sgs-sage/20 p-5">
+                  <article key={order.orderNumber} className="min-w-0 rounded-2xl border border-sgs-line bg-sgs-sage/20 p-4 sm:p-5">
                     <div className="mb-3 flex flex-wrap items-center gap-3">
                       <h3 className="font-display text-xl font-bold text-sgs-ink">#{order.orderNumber}</h3>
                       <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-sgs-green-dark">
@@ -1072,7 +1072,7 @@ export default function AdminPanel({ initialTab = 'products', onBackToStore }: A
                     </div>
                     <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
                       <div>
-                        <p className="text-sm text-sgs-ink/70">
+                        <p className="break-words text-sm text-sgs-ink/70">
                           {order.customer.fullName} · {order.customer.mobileNumber}
                           {order.customer.email ? ` · ${order.customer.email}` : ''}
                         </p>
@@ -1081,9 +1081,9 @@ export default function AdminPanel({ initialTab = 'products', onBackToStore }: A
                         </p>
                         <ul className="mt-3 space-y-2 text-sm text-sgs-ink/75">
                           {order.lines.map((line) => (
-                            <li key={`${order.orderNumber}-${line.productId}`} className="flex justify-between gap-4">
-                              <span>{line.productName} × {line.quantity}</span>
-                              <span>{formatRupees(line.lineTotal)}</span>
+                            <li key={`${order.orderNumber}-${line.productId}`} className="flex min-w-0 justify-between gap-3">
+                              <span className="min-w-0 break-words">{line.productName} × {line.quantity}</span>
+                              <span className="shrink-0">{formatRupees(line.lineTotal)}</span>
                             </li>
                           ))}
                         </ul>

@@ -7,8 +7,8 @@ interface CategoryListProps {
 
 export default function CategoryList({ selectedCategoryId, onSelect }: CategoryListProps) {
   return (
-    <div className="max-w-content mx-auto px-4 py-4">
-      <div className="flex gap-2 overflow-x-auto no-scrollbar">
+    <div className="max-w-content mx-auto w-full min-w-0 px-4 py-4">
+      <div className="flex max-w-full gap-2 overflow-x-auto no-scrollbar">
         <button
           onClick={() => onSelect(null)}
           className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium border transition-colors ${

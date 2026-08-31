@@ -3,9 +3,9 @@ import LocationDetector from './LocationDetector'
 export default function Hero() {
   return (
     <section id="top" className="border-b border-sgs-line bg-sgs-sage/40">
-      <div className="max-w-content mx-auto px-4 py-10 md:py-16 grid md:grid-cols-[1.2fr_1fr] gap-10 items-center">
+      <div className="max-w-content mx-auto grid items-center gap-7 px-4 py-8 md:grid-cols-[1.2fr_1fr] md:gap-10 md:py-16">
         <div>
-          <h1 className="font-display font-extrabold text-4xl md:text-5xl leading-[1.05] tracking-tight mb-4">
+          <h1 className="mb-4 font-display text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl">
             SGS Hyper Supermarket
           </h1>
           <p className="text-xl md:text-2xl font-display font-semibold text-sgs-green-dark mb-3">

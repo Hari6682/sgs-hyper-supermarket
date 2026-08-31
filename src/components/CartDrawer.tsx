@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { formatRupees } from '../lib/currency'
 import { useCart } from '../context/CartContext'
 import { useProductCatalog } from '../context/ProductCatalogContext'
@@ -10,6 +11,15 @@ export default function CartDrawer({ onCheckout }: CartDrawerProps) {
   const { lines, isCartOpen, closeCart, updateQuantity, removeFromCart, subtotal } = useCart()
   const { products } = useProductCatalog()
 
+  useEffect(() => {
+    if (!isCartOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isCartOpen])
+
   if (!isCartOpen) return null
 
   const items = lines
@@ -19,7 +29,7 @@ export default function CartDrawer({ onCheckout }: CartDrawerProps) {
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-sgs-ink/40 animate-fade-in" onClick={closeCart}>
       <div
-        className="h-full w-full sm:w-[420px] bg-sgs-cream flex flex-col animate-slide-in"
+        className="flex h-[100dvh] w-full flex-col bg-sgs-cream animate-slide-in sm:w-[420px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-sgs-line px-5 py-4">
@@ -90,7 +100,7 @@ export default function CartDrawer({ onCheckout }: CartDrawerProps) {
               ))}
             </ul>
 
-            <div className="border-t border-sgs-line px-5 py-4 space-y-3">
+            <div className="space-y-3 border-t border-sgs-line px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-sgs-ink/60">Subtotal</span>
                 <span className="font-medium">{formatRupees(subtotal)}</span>
