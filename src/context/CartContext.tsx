@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
 import type { CartLine } from '../types'
-import { PRODUCTS } from '../data/products'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { useProductCatalog } from './ProductCatalogContext'
 
 interface CartContextValue {
   lines: CartLine[]
@@ -19,6 +19,7 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { products } = useProductCatalog()
   const [lines, setLines] = useLocalStorage<CartLine[]>('sgs.cart', [])
   const [isCartOpen, setIsCartOpen] = useState(false)
 
@@ -55,10 +56,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const subtotal = useMemo(() => {
     return lines.reduce((sum, l) => {
-      const product = PRODUCTS.find((p) => p.id === l.productId)
+      const product = products.find((p) => p.id === l.productId)
       return product ? sum + product.price * l.quantity : sum
     }, 0)
-  }, [lines])
+  }, [lines, products])
 
   const value: CartContextValue = {
     lines,

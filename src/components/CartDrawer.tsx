@@ -1,6 +1,6 @@
-import { PRODUCTS } from '../data/products'
 import { formatRupees } from '../lib/currency'
 import { useCart } from '../context/CartContext'
+import { useProductCatalog } from '../context/ProductCatalogContext'
 
 interface CartDrawerProps {
   onCheckout: () => void
@@ -8,11 +8,12 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ onCheckout }: CartDrawerProps) {
   const { lines, isCartOpen, closeCart, updateQuantity, removeFromCart, subtotal } = useCart()
+  const { products } = useProductCatalog()
 
   if (!isCartOpen) return null
 
   const items = lines
-    .map((line) => ({ line, product: PRODUCTS.find((p) => p.id === line.productId) }))
+    .map((line) => ({ line, product: products.find((p) => p.id === line.productId) }))
     .filter((x): x is { line: typeof lines[number]; product: NonNullable<typeof x.product> } => !!x.product)
 
   return (

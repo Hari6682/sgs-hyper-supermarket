@@ -39,6 +39,7 @@ export interface Product {
   price: number // ₹, current selling price
   mrp?: number // ₹, optional strike-through price
   imageUrl: string
+  offerText?: string
   popular?: boolean
   inStock: boolean
 }
@@ -58,6 +59,7 @@ export type OrderType = 'PICKUP' // Phase 2 will add 'DELIVERY'
 
 export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED'
 export type OrderStatus = 'PLACED' | 'CONFIRMED' | 'READY' | 'COMPLETED' | 'CANCELLED'
+export type CompanyRole = 'owner' | 'admin' | 'worker'
 
 export interface CustomerDetails {
   fullName: string
@@ -65,12 +67,24 @@ export interface CustomerDetails {
   email?: string
 }
 
+export interface OrderLineSnapshot {
+  productId: string
+  productName: string
+  brand: string
+  packSize: string
+  imageUrl: string
+  quantity: number
+  unitPrice: number
+  lineTotal: number
+}
+
 export interface Order {
+  id?: string
   orderNumber: string
   customer: CustomerDetails
   storeId: string
   orderType: OrderType
-  lines: CartLine[]
+  lines: OrderLineSnapshot[]
   pickupDate: string // ISO date, e.g. "2026-09-02"
   pickupSlotId: string
   subtotal: number
@@ -78,10 +92,40 @@ export interface Order {
   total: number
   paymentStatus: PaymentStatus
   orderStatus: OrderStatus
+  statusNote?: string
   createdAt: string
+  updatedAt?: string
 }
 
 export interface Coordinates {
   latitude: number
   longitude: number
+}
+
+export interface StaffMember {
+  userId: string
+  email: string
+  role: CompanyRole
+  storeId?: string
+}
+
+export interface StockAlertRequest {
+  id?: string
+  productId: string
+  productName: string
+  customerName: string
+  email?: string
+  mobileNumber?: string
+  createdAt?: string
+  notified?: boolean
+}
+
+export interface SupportMessage {
+  id?: string
+  fullName: string
+  email?: string
+  mobileNumber?: string
+  subject: string
+  message: string
+  createdAt?: string
 }

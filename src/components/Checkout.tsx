@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react'
-import { PRODUCTS } from '../data/products'
 import { ACTIVE_STORES, getStoreById } from '../data/stores'
 import { PICKUP_SLOTS, PICKUP_DAYS_AHEAD } from '../data/pickupSlots'
 import { formatRupees } from '../lib/currency'
 import { useCart } from '../context/CartContext'
+import { useOrderCenter } from '../context/OrderCenterContext'
+import { useProductCatalog } from '../context/ProductCatalogContext'
 import { useStore } from '../context/StoreContext'
 import Payment from './Payment'
 import type { CustomerDetails, Order } from '../types'
-import type { RazorpaySuccessResponse } from '../lib/razorpay'
 
 interface CheckoutProps {
   onOrderPlaced: (order: Order) => void
@@ -32,6 +32,8 @@ function toIsoDate(d: Date) {
 
 export default function Checkout({ onOrderPlaced, onBack }: CheckoutProps) {
   const { lines, subtotal, clearCart } = useCart()
+  const { placeOrder } = useOrderCenter()
+  const { products } = useProductCatalog()
   const { selectedStoreId, setSelectedStoreId } = useStore()
 
   const [fullName, setFullName] = useState('')
@@ -45,7 +47,7 @@ export default function Checkout({ onOrderPlaced, onBack }: CheckoutProps) {
   const selectedStore = selectedStoreId ? getStoreById(selectedStoreId) : null
 
   const items = lines
-    .map((line) => ({ line, product: PRODUCTS.find((p) => p.id === line.productId) }))
+    .map((line) => ({ line, product: products.find((p) => p.id === line.productId) }))
     .filter((x): x is { line: typeof lines[number]; product: NonNullable<typeof x.product> } => !!x.product)
 
   const charges = 0 // Phase 1: in-store pickup has no delivery/service charge
@@ -66,7 +68,7 @@ export default function Checkout({ onOrderPlaced, onBack }: CheckoutProps) {
     return ''
   }
 
-  function handlePaymentSuccess(_response: RazorpaySuccessResponse) {
+  async function handlePaymentSuccess() {
     const customer: CustomerDetails = {
       fullName: fullName.trim(),
       mobileNumber: mobileNumber.trim(),
@@ -78,7 +80,16 @@ export default function Checkout({ onOrderPlaced, onBack }: CheckoutProps) {
       customer,
       storeId: selectedStoreId!,
       orderType: 'PICKUP',
-      lines,
+      lines: items.map(({ line, product }) => ({
+        productId: product.id,
+        productName: product.name,
+        brand: product.brand,
+        packSize: product.packSize,
+        imageUrl: product.imageUrl,
+        quantity: line.quantity,
+        unitPrice: product.price,
+        lineTotal: product.price * line.quantity,
+      })),
       pickupDate,
       pickupSlotId,
       subtotal,
@@ -86,11 +97,17 @@ export default function Checkout({ onOrderPlaced, onBack }: CheckoutProps) {
       total,
       paymentStatus: 'PAID',
       orderStatus: 'PLACED',
+      statusNote: 'We have received your order and the store team will confirm it shortly.',
       createdAt: new Date().toISOString(),
     }
 
-    clearCart()
-    onOrderPlaced(order)
+    try {
+      const savedOrder = await placeOrder(order)
+      clearCart()
+      onOrderPlaced(savedOrder)
+    } catch {
+      setFormError('We could not save your order right now. Please try again.')
+    }
   }
 
   if (items.length === 0) {

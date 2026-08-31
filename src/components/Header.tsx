@@ -61,6 +61,13 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
             />
           </div>
 
+          <a
+            href="/admin"
+            className="hidden md:inline-flex items-center rounded-full border border-sgs-line bg-white px-3.5 py-2 text-sm font-medium hover:border-sgs-green transition-colors"
+          >
+            Admin
+          </a>
+
           {/* Cart */}
           <button
             onClick={openCart}
@@ -101,6 +108,12 @@ export default function Header({ searchQuery, onSearchChange, onCategorySelect }
         <nav
           className={`${menuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-1 md:gap-4 pb-3 md:pb-2 overflow-x-auto no-scrollbar`}
         >
+          <a
+            href="/admin"
+            className="text-left md:text-center whitespace-nowrap text-sm font-medium text-sgs-ink/80 hover:text-sgs-green py-1"
+          >
+            Admin Panel
+          </a>
           <button
             onClick={() => {
               onCategorySelect(null)

@@ -30,9 +30,9 @@ export default function Footer() {
         <div>
           <p className="font-medium mb-3">Customer Support</p>
           <ul className="space-y-1.5 text-sm text-sgs-ink/60">
-            <li>Contact Us</li>
-            <li>Pickup Information</li>
-            <li>Track My Order</li>
+            <li><a href="/contact-us" className="hover:text-sgs-green-dark">Contact Us</a></li>
+            <li><a href="/pickup-info" className="hover:text-sgs-green-dark">Pickup Information</a></li>
+            <li><a href="/track-order" className="hover:text-sgs-green-dark">Track My Order</a></li>
           </ul>
         </div>
 

@@ -1,6 +1,5 @@
 import { getStoreById } from '../data/stores'
 import { PICKUP_SLOTS } from '../data/pickupSlots'
-import { PRODUCTS } from '../data/products'
 import { formatRupees } from '../lib/currency'
 import type { Order } from '../types'
 
@@ -49,18 +48,14 @@ export default function OrderConfirmation({ order, onContinueShopping }: OrderCo
         <div className="border-t border-sgs-line pt-4 mb-5">
           <p className="text-xs font-medium text-sgs-ink/50 mb-2">Order summary</p>
           <ul className="space-y-1.5">
-            {order.lines.map((line) => {
-              const product = PRODUCTS.find((p) => p.id === line.productId)
-              if (!product) return null
-              return (
-                <li key={line.productId} className="flex justify-between text-sm">
-                  <span className="text-sgs-ink/70">
-                    {product.name} × {line.quantity}
-                  </span>
-                  <span>{formatRupees(product.price * line.quantity)}</span>
-                </li>
-              )
-            })}
+            {order.lines.map((line) => (
+              <li key={line.productId} className="flex justify-between text-sm">
+                <span className="text-sgs-ink/70">
+                  {line.productName} × {line.quantity}
+                </span>
+                <span>{formatRupees(line.lineTotal)}</span>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -79,6 +74,15 @@ export default function OrderConfirmation({ order, onContinueShopping }: OrderCo
         <p className="text-sm font-medium">
           Please show your order number when collecting your order.
         </p>
+      </div>
+
+      <div className="text-center">
+        <a
+          href={`/track-order?order=${encodeURIComponent(order.orderNumber)}`}
+          className="mb-4 inline-flex rounded-full border border-sgs-line px-6 py-3 font-medium text-sgs-green-dark hover:border-sgs-green"
+        >
+          Track This Order
+        </a>
       </div>
 
       <div className="text-center">

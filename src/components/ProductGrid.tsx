@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { PRODUCTS } from '../data/products'
 import { getCategoryById } from '../data/categories'
+import { useProductCatalog } from '../context/ProductCatalogContext'
 import ProductCard from './ProductCard'
 
 interface ProductGridProps {
@@ -8,19 +8,16 @@ interface ProductGridProps {
   selectedCategoryId: string | null
 }
 
-const MAX_PRICE = Math.max(...PRODUCTS.map((p) => p.price))
-
 export default function ProductGrid({ searchQuery, selectedCategoryId }: ProductGridProps) {
-  const [priceCeiling, setPriceCeiling] = useState(MAX_PRICE)
+  const { products, isLoading } = useProductCatalog()
   const [popularOnly, setPopularOnly] = useState(false)
   const [discountedOnly, setDiscountedOnly] = useState(false)
 
   const filtered = useMemo(() => {
     const query = searchQuery.trim().toLowerCase()
 
-    return PRODUCTS.filter((p) => {
+    return products.filter((p) => {
       if (selectedCategoryId && p.categoryId !== selectedCategoryId) return false
-      if (p.price > priceCeiling) return false
       if (popularOnly && !p.popular) return false
       if (discountedOnly && !(p.mrp && p.mrp > p.price)) return false
 
@@ -32,7 +29,7 @@ export default function ProductGrid({ searchQuery, selectedCategoryId }: Product
 
       return true
     })
-  }, [searchQuery, selectedCategoryId, priceCeiling, popularOnly, discountedOnly])
+  }, [discountedOnly, popularOnly, products, searchQuery, selectedCategoryId])
 
   return (
     <section id="products" className="max-w-content mx-auto px-4 pb-16">
@@ -62,21 +59,14 @@ export default function ProductGrid({ searchQuery, selectedCategoryId }: Product
           Discounted
         </button>
 
-        <label className="flex items-center gap-2 text-sm text-sgs-ink/70">
-          Up to ₹{priceCeiling}
-          <input
-            type="range"
-            min={20}
-            max={MAX_PRICE}
-            step={10}
-            value={priceCeiling}
-            onChange={(e) => setPriceCeiling(Number(e.target.value))}
-            className="accent-sgs-green"
-          />
-        </label>
       </div>
 
-      {filtered.length === 0 ? (
+      {isLoading ? (
+        <div className="rounded-card border border-dashed border-sgs-line py-16 text-center">
+          <p className="font-display font-semibold text-lg mb-1">Loading catalog…</p>
+          <p className="text-sm text-sgs-ink/60">Pulling the latest products for this branch.</p>
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="rounded-card border border-dashed border-sgs-line py-16 text-center">
           <p className="font-display font-semibold text-lg mb-1">No products match your search</p>
           <p className="text-sm text-sgs-ink/60">Try a different keyword, category, or filter.</p>
